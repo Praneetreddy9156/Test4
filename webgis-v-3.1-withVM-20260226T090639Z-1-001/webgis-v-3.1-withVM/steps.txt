@@ -1,0 +1,38 @@
+Create ubuntu vm
+save ssh key
+configure ssh path and connect via powersheel or terminal
+
+ssh -i C:\Users\user\Downloads\v6-web_key.pem asdf@20.120.34.203
+
+in powershell run the content of setup fille
+
+sudo apt update
+sudo apt install python3-venv python3-distutils -y
+sudo apt install python3-full -y
+cd ~/geoapp
+python3 -m venv venv
+source venv/bin/activate
+pip install --upgrade pip
+pip install -r requirements.txt
+python app.py
+
+
+message similar to 
+Running on http://172.17.0.4:5000
+
+check public ip of virtual machine 
+Browser → http://<public_VM_IP>:5000 → Leaflet map shows
+Browser → http://<public_VM_IP>:5000/api/data → JSON is shown
+ 
+	* add inbound rule if not present for 5000 port
+
+change data file
+install scp if not installed
+
+run on local powershell (not connected to vm) this to replace current data file 
+scp -i "C:\Users\user\Downloads\v6-web_key.pem" "Fullpath of new data.geojson" <username>@<ipofVM>:~/geoapp/data/data.geojson
+
+
+
+
+

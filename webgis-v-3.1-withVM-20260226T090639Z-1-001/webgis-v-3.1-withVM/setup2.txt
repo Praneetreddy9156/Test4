@@ -1,0 +1,77 @@
+mkdir -p geoapp/{templates,data} && cd geoapp && \
+echo -e "flask\nflask-cors" > requirements.txt && \
+cat > app.py << 'EOF'
+from flask import Flask, jsonify, render_template
+from flask_cors import CORS
+import json, os
+
+app = Flask(__name__)
+CORS(app)
+
+@app.route('/')
+def home():
+    return render_template('index.html')
+
+@app.route('/api/data')
+def get_data():
+    geojson_path = os.path.join('data', 'data.geojson')
+    with open(geojson_path) as f:
+        data = json.load(f)
+    return jsonify(data)
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=5000, debug=True)
+EOF
+
+cat > templates/index.html << 'EOF'
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Leaflet Map with API</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <style>#map { height: 500px; width: 100%; }</style>
+</head>
+<body>
+  <h2>Leaflet Map Fetching GeoJSON from API</h2>
+  <div id="map"></div>
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <script>
+    var map = L.map('map').setView([20.5937, 78.9629], 5);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+
+    fetch('/api/data')
+      .then(res => res.json())
+      .then(data => {
+        L.geoJSON(data, {
+          onEachFeature: function(feature, layer) {
+            if (feature.properties) {
+              // Bind popup showing all properties
+              var popupContent = "";
+              for (var key in feature.properties) {
+                popupContent += "<b>" + key + ":</b> " + feature.properties[key] + "<br>";
+              }
+              layer.bindPopup(popupContent);
+            }
+          }
+        }).addTo(map);
+      })
+      .catch(err => console.error('Error fetching GeoJSON:', err));
+  </script>
+</body>
+</html>
+EOF
+
+cat > data/data.geojson << 'EOF'
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": { "name": "Sample Point", "power": 50, "radius": 20000, "freq": 1800 },
+      "geometry": { "type": "Point", "coordinates": [78.9629, 20.5937] }
+    }
+  ]
+}
+EOF
+
+echo "Setup complete. Install dependencies with: pip3 install -r requirements.txt"

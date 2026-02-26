@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Leaflet Map with API</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <style>#map { height: 500px; width: 100%; }</style>
+</head>
+<body>
+  <h2>Leaflet Map Fetching GeoJSON from API</h2>
+  <div id="map"></div>
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <script>
+    var map = L.map('map').setView([20.5937, 78.9629], 5);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+
+    fetch('/api/data')
+      .then(res => res.json())
+      .then(data => {
+        L.geoJSON(data, {
+          onEachFeature: function(feature, layer) {
+            if (feature.properties) {
+              // Bind popup showing all properties
+              var popupContent = "";
+              for (var key in feature.properties) {
+                popupContent += "<b>" + key + ":</b> " + feature.properties[key] + "<br>";
+              }
+              layer.bindPopup(popupContent);
+            }
+          }
+        }).addTo(map);
+      })
+      .catch(err => console.error('Error fetching GeoJSON:', err));
+  </script>
+</body>
+</html>

@@ -1,0 +1,1 @@
+ssh -i C:\Users\user\Downloads\v5-web_key.pem asdf@20.230.218.242 scp C:\Users\user\Documents\GeoSP\webgis-v1\data.geojson asdf@20.230.218.242:~/geoapp/data/data.geojson

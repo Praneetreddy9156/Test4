@@ -1,0 +1,1 @@
+scp C:\Users\user\Documents\newdata.geojson username@20.230.218.242:~/geoapp/data/data.geojson
