@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Azure Maps Demo</title>
+    <meta charset="utf-8" />
+    <script src="https://atlas.microsoft.com/sdk/javascript/mapcontrol/2/atlas.min.js"></script>
+    <link href="https://atlas.microsoft.com/sdk/javascript/mapcontrol/2/atlas.min.css" rel="stylesheet" />
+    <style>
+        #map {
+            width: 100%;
+            height: 500px;
+        }
+    </style>
+</head>
+<body>
+
+<h2>Azure Maps Demo</h2>
+<div id="map"></div>
+
+<script>
+    var map = new atlas.Map('map', {
+        center: [72.8777, 19.0760], // Mumbai
+        zoom: 10,
+        authOptions: {
+            authType: 'subscriptionKey',
+            subscriptionKey: 'YOUR_KEY'
+        }
+    });
+
+    map.events.add('ready', function () {
+
+        // Add a marker
+        var marker = new atlas.HtmlMarker({
+            position: [72.8777, 19.0760],
+            text: 'Mumbai'
+        });
+        map.markers.add(marker);
+
+        // Draw a simple route (line)
+        var line = new atlas.data.LineString([
+            [72.8777, 19.0760], // Mumbai
+            [73.8567, 18.5204]  // Pune
+        ]);
+
+        var dataSource = new atlas.source.DataSource();
+        map.sources.add(dataSource);
+
+        dataSource.add(new atlas.data.Feature(line));
+
+        var lineLayer = new atlas.layer.LineLayer(dataSource, null, {
+            strokeColor: 'blue',
+            strokeWidth: 4
+        });
+
+        map.layers.add(lineLayer);
+    });
+</script>
+
+</body>
+</html>

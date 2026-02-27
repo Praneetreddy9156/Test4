@@ -1,0 +1,27 @@
+C:\Users\user\Documents\geoapp>git init
+Initialized empty Git repository in C:/Users/user/Documents/GeoSP/New Folder/geoapp/.git/
+
+C:\Users\user\Documents\geoapp>git add .
+
+C:\Users\user\Documents\geoapp>git commit -m "initial commit"
+[master (root-commit) 860d9ca] initial commit
+ 4 files changed, 52 insertions(+)
+ create mode 100644 app.py
+ create mode 100644 data/data.geojson
+ create mode 100644 requirements.txt
+ create mode 100644 templates/index.html
+
+C:\Users\user\Documents\geoapp>git branch -M main
+
+C:\Users\user\Documents\geoapp>git remote add origin https://github.com/nihcas-rakendep/g1.git
+
+C:\Users\user\Documents\geoapp>git push -u origin main
+Enumerating objects: 8, done.
+Counting objects: 100% (8/8), done.
+Delta compression using up to 8 threads
+Compressing objects: 100% (5/5), done.
+Writing objects: 100% (8/8), 1.26 KiB | 647.00 KiB/s, done.
+Total 8 (delta 0), reused 0 (delta 0), pack-reused 0
+To https://github.com/nihcas-rakendep/g1.git
+ * [new branch]      main -> main
+branch 'main' set up to track 'origin/main'.

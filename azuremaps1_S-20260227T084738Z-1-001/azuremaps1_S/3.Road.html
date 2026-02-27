@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Azure Maps - Real Route</title>
+    <meta charset="utf-8" />
+
+    <script src="https://atlas.microsoft.com/sdk/javascript/mapcontrol/2/atlas.min.js"></script>
+    <link href="https://atlas.microsoft.com/sdk/javascript/mapcontrol/2/atlas.min.css" rel="stylesheet" />
+
+    <style>
+        body { margin:0; font-family: Arial; }
+        #map { width: 100%; height: 500px; }
+        button { margin: 10px; padding: 6px 10px; }
+    </style>
+</head>
+<body>
+
+<h3>Real Route (Road-based)</h3>
+<button onclick="getRoute()">Draw Real Route</button>
+
+<div id="map"></div>
+
+<script>
+var map, dataSource;
+
+var mumbai = [72.8777, 19.0760];
+var pune = [73.8567, 18.5204];
+
+function initMap() {
+
+    map = new atlas.Map('map', {
+        center: mumbai,
+        zoom: 6,
+        authOptions: {
+            authType: 'subscriptionKey',
+            subscriptionKey: 'YOUR_KEY'
+        }
+    });
+
+    map.events.add('ready', function () {
+
+        dataSource = new atlas.source.DataSource();
+        map.sources.add(dataSource);
+
+        map.layers.add(new atlas.layer.LineLayer(dataSource, null, {
+            strokeColor: 'red',
+            strokeWidth: 5
+        }));
+    });
+}
+
+window.onload = initMap;
+
+function getRoute() {
+
+    var url = `https://atlas.microsoft.com/route/directions/json?api-version=1.0&query=${mumbai[1]},${mumbai[0]}:${pune[1]},${pune[0]}&subscription-key=YOUR_KEY`;
+
+    fetch(url)
+    .then(res => res.json())
+    .then(data => {
+
+        var points = data.routes[0].legs[0].points.map(p => [p.longitude, p.latitude]);
+
+        dataSource.clear();
+
+        dataSource.add(new atlas.data.Feature(
+            new atlas.data.LineString(points)
+        ));
+
+        map.setCamera({
+            bounds: atlas.data.BoundingBox.fromPositions(points),
+            padding: 50
+        });
+    });
+}
+</script>
+
+</body>
+</html>
